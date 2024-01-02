@@ -1,0 +1,237 @@
+---
+title: "Client Report"
+output: 
+      pdf_document
+author: IBH
+params:
+  dep_var: NA
+  focus_data: NA
+  file_data: NA
+  arima_summary: NA
+  explanation_tb: NA
+header-includes:
+      - \usepackage{xcolor}
+      - \definecolor{mybgcolor}{HTML}{F9F9F9}
+      - \usepackage{sectsty}
+      - \allsectionsfont{\color{red}}
+classoption:
+      - twocolumn
+---
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+```
+
+\pagecolor{mybgcolor}
+\color{black}
+
+:::::::::: {.columns}
+
+::: {.column width=50%}
+
+## Change in `r params$dep_var`
+
+**This graph shows how much the person has changed in `r params$dep_var` over time.**
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.height=3}
+ggplot(params$focus_data, aes_string(x = "Time", y = params$dep_var)) +
+      geom_point(size = 1.5) +
+      geom_point(data = params$focus_data[(params$focus_data[,3] == min(params$focus_data[,3], na.rm = T)), ], color="#87bc45", 
+                 size=4) +
+      geom_point(data = params$focus_data[(params$focus_data[,3] == max(params$focus_data[,3], na.rm = T)), ], color="orange", 
+                 size=4) +
+      geom_smooth() +
+      scale_color_brewer(palette = "Set1") +
+  theme_minimal() +
+  theme(plot.background = element_rect(colour = "#909090", fill=NA, size=2))
+```
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+TimeSeriesData <- na_interpolation(params$focus_data[,3]) 
+notrend_test <- notrend_test(TimeSeriesData)
+anytrend_test <- notrend_test(TimeSeriesData, test = "MK",
+                                 factor.length = "adaptive.selection")
+variance_box_test <- Box.test(TimeSeriesData, type = "Box-Pierce", lag = 1)
+if ( notrend_test$p.value < 0.05 |
+         anytrend_test$p.value < 0.05 |
+         variance_box_test$p.value < 0.05) {
+      out = "Well-being changed significantly over this time period."
+} else {
+      out = "Well-being did not change significantly over this time period."
+}
+```
+
+`r out`
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+
+min_time <- params$focus_data[params$focus_data[,3] == min(params$focus_data[,3], na.rm = T), 2]
+min_time <- min_time[!is.na(min_time)]
+max_time <- params$focus_data[params$focus_data[,3] == max(params$focus_data[,3], na.rm = T), 2]
+max_time <- max_time[!is.na(max_time)]
+
+min_var_string <- paste0(min_time, collapse = ", ")
+max_var_string <- paste0(max_time, collapse = ", ")
+
+```
+
+## Key correlates of well-being 
+
+**This graph shows the key correlates of well-being from a linear analysis.**
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.width=14, fig.height=9}
+max_x = 0.5
+min_x = -0.5
+  
+if (max(params$arima_summary$Coef) > max_x) {
+    max_x = max(params$arima_summary$Coef)
+}
+if (min(params$arima_summary$Coef) < min_x) {
+    min_x = min(params$arima_summary$Coef)
+}
+
+params$arima_summary %>%
+    mutate(decision = case_when(
+      errcol == "Yes" ~ "Important",
+      errcol == "No" ~ "Not significantly important"),
+      decision = factor(decision, 
+                        levels = c("Important", "Not significantly important")),
+      xmin = Coef - 2*SE, 
+      xmax = Coef + 2*SE,
+    ) %>%
+    ggplot(aes(x = Coef,
+               y = reorder(variable, Coef), # ordering the bars from high to low by the value of meanImp
+               fill = decision,
+               text = paste("Decision:", decision,
+                            "\nCoef:",round(Coef, 3)))) + # the text argument is specific for the tooltip in plotly
+    geom_col() +
+    # manually changing color for each decision
+    scale_fill_manual(values = c("Important" = "#87bc45",
+                                 "Not significantly important" = "grey")) +
+    # giving labels to x axis, y axis and legend (fill)
+  labs(x = paste0("< more this way, less ", dep_var, " | more this way, more ", dep_var, " >"), 
+         y = " ", fill = " ") +
+    xlim(min_x, max_x) +
+    # using minimal theme
+    theme_minimal() +
+      theme(plot.background = element_rect(colour = "#909090", fill=NA, size=4),
+            text = element_text(size = 20),
+            #axis.title.x = element_text(size = 20),
+            legend.position = "none")
+```
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+out_linear1 <- get_linear_analysis_summary(params$arima_summary) 
+
+out_linear2 <- paste0("Processes in grey are generally less important to your well-being than processes in green. ",
+           "Processes on the right increase the ", colnames(params$focus_data)[3], 
+           ". Processes on the left decrease the ", colnames(params$focus_data)[3], ". ",
+           linear_imp_report(params$arima_summary, params$focus_data))
+```
+
+
+`r out_linear1`  
+  
+\begingroup
+\fontsize{8}{8}\selectfont
+`r out_linear2`
+\endgroup
+
+:::
+
+::: {.column width=50%}
+
+## Determinants of well-being: How this person compares to the average
+
+**This plot presents how much the person engages in different behaviors, compared to the average.**
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+
+stats <- get_variable_stat(params$focus_data, params$file_data)
+
+summary_data <- stats %>%
+    mutate(ind_perc = as.numeric(X..mean)-20) %>%
+      dplyr::select(Variable, ind_perc) %>% 
+      spread(Variable, ind_perc) %>%
+      rbind(rep(100, ncol(.)),rep(0, ncol(.))) %>%
+      slice(2:3, 1)
+
+min_percentile = min(stats$X..mean)
+max_percentile = max(stats$X..mean)
+min_perc_var = stats %>%
+      filter(X..mean == min(X..mean)) %>%
+      dplyr::select(Variable)
+max_perc_var = stats %>%
+      filter(X..mean == max(X..mean)) %>%
+      dplyr::select(Variable)
+
+
+max_exp <- params$explanation_tb %>%
+      filter(Variablename == as.character(max_perc_var)) %>%
+      dplyr::select(Explanation)
+
+min_exp <- params$explanation_tb %>%
+      filter(Variablename == as.character(min_perc_var)) %>%
+      dplyr::select(Explanation)
+
+sp_1 <- paste0("This person is in the ",
+                 round(max_percentile, 0),
+                 "th percentile for ",
+                 max_perc_var,
+                 ". ",
+                 max_perc_var,
+                 " means ",
+                 max_exp, 
+                 ". This means this person does this more than ",
+                 round(max_percentile, 0),
+                 " percent of people.\n\n")
+    
+sp_2 = paste0("This person is in the ",
+                 round(min_percentile, 0),
+                 "th percentile for ",
+                 min_perc_var,
+                 ". ",
+                 min_perc_var,
+                 " means ",
+                 min_exp, 
+                 ". This means this person does this less than ",
+                 round(100-min_percentile, 0),
+                 " percent of people.")
+```
+       
+```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.width=10, fig.height=10}
+fmsb::radarchart( summary_data  , axistype=1 , 
+    #custom polygon
+    pcol=rgb(0.34,0.60,0.18,0.9) , pfcol=rgb(0.34,0.48,0.18,0.5) , plwd=5 , 
+    #custom the grid
+    cglcol="grey", cglty=1, axislabcol="grey", caxislabels=seq(20,100,20), cglwd=1,
+    #custom labels
+    vlcex=1.5 
+    )
+box(col = "#5d5d5d",
+      which = "plot",
+      lwd = 2)
+```
+
+\begingroup
+\fontsize{8}{8}\selectfont
+`r sp_1`  
+\endgroup
+
+\begingroup
+\fontsize{8}{8}\selectfont
+`r sp_2`  
+\endgroup
+
+## Potential targets of change 
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+targets <- target_of_change(params$arima_summary)
+```
+
+`r targets`
+
+:::
+
+::::::::::
+

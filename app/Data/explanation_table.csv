@@ -1,0 +1,43 @@
+Variablename,Valance,OutcomeProcess,NormalTerm,Explanation,SuggestedIntervention
+Naffect,Negative,Outcome ,Negative Affect,"When this was high, you experience alot of negative affect",na
+PAffect,Positive,Outcome,Positive Affect,"When this was high, you experience alot of positive affect",na
+LifeSatisfaction,Negative,Outcome,Life Satisfaction,"When this was high, you experienced life satisfaction",na
+Lonely,Negative,Outcome,Lonelyness,"When this was high, you felt lonely",na
+Hsupport,Positive,Outcome,High Social Support,"When this was high, you felt supported by others",na
+,,,,,
+FocusImportantMoments,NA,Process,Mindful,"When this was high, you are able to focus on the important moments in your life",Link
+AllowFeelings,NA,Process,Accepting and allowing feelings,"When this was high, you are willing to allow feelings and don't excessively defend against them",Link
+ObserveThoughtsDistance,NA,Process,Observing thoughts,"When this was high, you are able to observe thoughts and not get entangled by them",Link
+SelfPole,NA,Process,Constant Self,"When this was high, you feel a stable sense of self",Link
+ChoseValue,NA,Process,Values,"When this was high, you tended to choose behavior that supports your values",LInk
+CommitAction,NA,Process,Take action,"When this was high, you tended to take action towards your values",Link
+,,,,,Link
+ConnectToPeople,NA,Process,Did things to Connect to valued people,"When this was high, you did things to Connect to valued people",Link
+StuckUnableChange,NA,Process,Feeling Stuck and Unable to change,"When this was high, you, you felt Stuck and Unable to change",Link
+PaidAttToImport,NA,Process,Pay attention to important things in life,"When this was high, you payed attention to important things in life",LInk
+HurtConnect,NA,Process,Hurt connection with people,"When this was high, you hurt your connection with people",Link
+PersonalImpor,NA,Process,Engage in personally important things,"When this was high, you engaged in personally important things",Link
+ExperienceRangeEmotions,NA,Process,Experience full range of Emotions,"When this was high, you experienced a full range of Emotions",Link
+StruggledToKeepDoing,NA,Process,Struggle to keep doing something important,"When this was high, you struggled to keep doing something important",Link
+NoMeaningfulChallenge,NA,Process,Lack a meaningful challenge,"When this was high, you lacked a meaningful challenge in your life",LInk
+AbleToChangeBehavior,NA,Process,Able to change behavior when useful,"When this was high, you were able to change behavior when useful",Link
+StuckToStrategies,NA,Process,Stuck to strategies that worked,"When this was high, you ,  you stuck to strategies that worked in the past",Link
+NoOutletForFeelings,NA,Process,Could not find an outlet for feelings,"When this was high, you could not find an outlet for feelings",Link
+Complying,NA,Process,Did things because complying with what others wanted,"When this was high, you did things because of what others wanted from you, not necessarily because you wanted it",Link
+ThinkingHelpedLife,NA,Process,Thinking helped my life,"When this was high, your thinking helped your  life",LInk
+ThinkingGotInWay,NA,Process,Thinking got in the way of my life,"When this was high, your thinking got intefered with or was a problem in your  life",Link
+HurtHealth,NA,Process,Did things to hurt my health,"When this was high, you  did things to hurt your health",Link
+StruggledToConnectMoments,NA,Process,Struggled to connect with the moments in my everyday life,"When this was high, you struggled to connect with the moments in your everyday life",Link
+ImportantChallenge,NA,Process,Found important ways to challenge myself,"When this was high, you  you found important ways to challenge myself",LInk
+HelpHealth,NA,Process,Did things to help your health.,"When this was high, you did things to help your health.",Link
+,,,,,
+AssertiveSD,NA,Process,Had opportunity to assert my needs and preferences,"When this was high, you had  the opportunity to assert your needs and preferences",Link
+AssertedNeedsBx,NA,Process,Successfully asserted needs and preferences,"When this was high, you successfully asserted your needs and preferences",LInk
+GiveReceiveFeedbackSD,NA,Process,Had opportunity to give or receive feedback,When this was highm you had the opportunity to give or receive feedback,Link
+GaveFeedbackBx,NA,Process,Gave or received feedback in an effective way,"When this was high, you gave or received feedback in an effective way",Link
+InterpersonConflictSD,NA,Process,Was invokved in an interpersonal conflict,"When this was high, you were involved in an interpersonal conflict",Link
+ResolvedConflinctBx,NA,Process,Was successful at resolving a conflict,"When this was high, you were successful at resolving a conflict",LInk
+ChanceToBeCloseSD,NA,Process,Had opportunity to be close with someone,"When this was high, you had opportunity to be close with someone",Link
+DisclosedBx,NA,Process,Disclosed something heartfelt or intimate to someone,"When this was high, you disclosed something heartfelt or intimate to someone",Link
+CouldExpressFeelingsSD,NA,Process,Had the opportunity to express my feelings to someone,"When this was high, you had the opportunity to express your feelings to someone",Link
+ExpressedFeelingsBx,NA,Process,I expressed my feeling to someone,When this was highm you expressed your feelings to someone,LInk
